@@ -85,9 +85,9 @@ class DropColumnsTransformer(BaseEstimator, TransformerMixin):
     def transform(self, X):
         assert isinstance(X, pd.core.frame.DataFrame), f'MappingTransformer.transform expected Dataframe but got {type(X)} instead.'
         if self.action == 'drop':
-        X_ = X.drop(columns=self.column_list)
+            X_ = X.drop(columns=self.column_list)
         else:
-        X_ = X[self.column_list]
+            X_ = X[self.column_list]
         return X_
 
     def fit_transform(self, X, y = None):
