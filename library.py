@@ -97,3 +97,30 @@ class DropColumnsTransformer(BaseEstimator, TransformerMixin):
     def fit(self, X, y = None):
         print("Warning: MappingTransformer.fit does nothing.")
         return X
+
+
+class Sigma3Transformer(BaseEstimator, TransformerMixin):
+  
+    def __init__(self, target_column):  
+        self.target_column = target_column
+
+    def fit(self, X, y = None):
+        print("Warning: MappingTransformer.fit does nothing.")
+        return X
+
+    def transform(self, X):
+        assert isinstance(X, pd.core.frame.DataFrame), f'MappingTransformer.transform expected Dataframe but got {type(X)} instead.'
+        assert self.target_column in X.columns.to_list(), f'unknown column {self.target_column}'
+        assert all([isinstance(v, (int, float)) for v in X[self.target_column].to_list()])
+        X_ = X.copy()
+        #compute mean of column - look for method
+        m = X_[self.target_column].mean()
+        #compute std of column - look for method
+        sigma = X_[self.target_column].std()
+        minb, maxb = (m - 3 * sigma, m + 3 * sigma)
+        X_[self.target_column] = X_[self.target_column].clip(lower=minb, upper=maxb)
+        return X_
+
+    def fit_transform(self, X, y = None):
+        result = self.transform(X)
+        return result
