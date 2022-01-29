@@ -142,8 +142,8 @@ class TukeyTransformer(BaseEstimator, TransformerMixin):
         assert self.target_column in X.columns.to_list(), f'unknown column {self.target_column}'
         assert all([isinstance(v, (int, float)) for v in X[self.target_column].to_list()])
         X_ = X.copy()
-        q1 = X_[column].quantile(0.25)
-        q3 = X_[column].quantile(0.75)
+        q1 = X_[self.target_column].quantile(0.25)
+        q3 = X_[self.target_column].quantile(0.75)
         iqr = q3-q1
         outer_low = q1-3*iqr
         outer_high = q3+3*iqr
