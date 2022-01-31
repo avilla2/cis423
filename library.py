@@ -3,6 +3,7 @@ import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.pipeline import Pipeline
 from sklearn.base import BaseEstimator, TransformerMixin #gives us the tools to build custom transformers
+from sklearn.impute import KNNImputer
 
 #This class maps values in a column, numeric or categorical.
 class MappingTransformer(BaseEstimator, TransformerMixin):
@@ -34,7 +35,7 @@ class OHETransformer(BaseEstimator, TransformerMixin):
         self.drop_first = drop_first
     
     def transform(self, X):
-        assert isinstance(X, pd.core.frame.DataFrame), f'MappingTransformer.transform expected Dataframe but got {type(X)} instead.'
+        assert isinstance(X, pd.core.frame.DataFrame), f'transformer.transform expected Dataframe but got {type(X)} instead.'
         return pd.get_dummies(X,
                             prefix=self.target_column,    #your choice
                             prefix_sep='_',     #your choice
@@ -48,7 +49,7 @@ class OHETransformer(BaseEstimator, TransformerMixin):
         return result
 
     def fit(self, X, y = None):
-        print("Warning: MappingTransformer.fit does nothing.")
+        print("Warning: transformer.fit does nothing.")
         return X
 
 
@@ -61,7 +62,7 @@ class RenamingTransformer(BaseEstimator, TransformerMixin):
     def transform(self, X):
         assert isinstance(X, pd.core.frame.DataFrame), f'RenamingTransformer.transform expected Dataframe but got {type(X)} instead.'
         verify = [ k for k in self.mapping_dict.keys() if k not in X.columns.to_list()]
-        assert len(verify) == 0, f'MappingTransformer.transform unknown column(s) {verify}'
+        assert len(verify) == 0, f'RenamingTransformer.transform unknown column(s) {verify}'
         X_ = X.copy()
         X_.rename(columns=self.mapping_dict, inplace=True)
         return X_
@@ -138,7 +139,7 @@ class TukeyTransformer(BaseEstimator, TransformerMixin):
         return X
 
     def transform(self, X):
-        assert isinstance(X, pd.core.frame.DataFrame), f'MappingTransformer.transform expected Dataframe but got {type(X)} instead.'
+        assert isinstance(X, pd.core.frame.DataFrame), f'transformer.transform expected Dataframe but got {type(X)} instead.'
         assert self.target_column in X.columns.to_list(), f'unknown column {self.target_column}'
         assert all([isinstance(v, (int, float)) for v in X[self.target_column].to_list()])
         X_ = X.copy()
@@ -178,6 +179,30 @@ class MinMaxTransformer(BaseEstimator, TransformerMixin):
           denom = (mx - mi)
           X_[col] -= mi
           X_[col] /= denom
+        return X_
+
+    def fit_transform(self, X, y = None):
+        result = self.transform(X)
+        return result
+
+
+class KNNTransformer(BaseEstimator, TransformerMixin):
+
+    def __init__(self,n_neighbors=5, weights="uniform", add_indicator=False):
+        self.n_neighbors = n_neighbors
+        self.weights=weights 
+        self.add_indicator=add_indicator
+
+    def fit(self, X, y = None):
+        print("Warning: transformer.fit does nothing.")
+        return X
+
+    def transform(self, X):
+        assert isinstance(X, pd.core.frame.DataFrame), f'transformer.transform expected Dataframe but got {type(X)} instead.'
+        cols = X.columns.to_list()
+        imputer = KNNImputer(n_neighbors=self.n_neighbors, weights=self.weights, add_indicator=self.add_indicator) 
+        imputed_data = imputer.fit_transform(X)
+        X_ = pd.DataFrame(imputed_data, columns=cols)
         return X_
 
     def fit_transform(self, X, y = None):
