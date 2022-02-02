@@ -58,13 +58,18 @@ class OHETransformer(BaseEstimator, TransformerMixin):
     
     def transform(self, X):
         assert isinstance(X, pd.core.frame.DataFrame), f'transformer.transform expected Dataframe but got {type(X)} instead.'
-        return pd.get_dummies(X,
+        try:
+            assert self.target_column in X.columns.to_list(), f'OHETransformer.transform unknown column {self.target_column}'
+            return pd.get_dummies(X,
                             prefix=self.target_column,    #your choice
                             prefix_sep='_',     #your choice
                             columns=[self.target_column],
                             dummy_na=self.dummy_na,    #will try to impute later so leave NaNs in place
                             drop_first=self.drop_first    #really should be True but I wanted to give a clearer picture
                             )
+        except:
+            print(f'Column {self.target_column} not found')
+            return X
 
     def fit_transform(self, X, y = None):
         result = self.transform(X)
