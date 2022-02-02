@@ -108,7 +108,12 @@ class DropColumnsTransformer(BaseEstimator, TransformerMixin):
     def transform(self, X):
         assert isinstance(X, pd.core.frame.DataFrame), f'MappingTransformer.transform expected Dataframe but got {type(X)} instead.'
         if self.action == 'drop':
-            X_ = X.drop(columns=self.column_list)
+            try:
+                verify = [ k for k in self.column_list if k not in X.columns.to_list()]
+                assert len(verify) == 0, f'DropColumnsTransformer.transform unknown column(s) {verify}'
+                X_ = X.drop(columns=self.column_list)
+            except:
+                print(f'Column(s) {self.column_list} were not dropped since they are not found')
         else:
             X_ = X[self.column_list]
         return X_
