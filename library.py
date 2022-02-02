@@ -114,6 +114,7 @@ class DropColumnsTransformer(BaseEstimator, TransformerMixin):
                 X_ = X.drop(columns=self.column_list)
             except:
                 print(f'Column(s) {self.column_list} were not dropped since they are not found')
+                return X
         else:
             X_ = X[self.column_list]
         return X_
