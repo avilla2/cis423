@@ -253,3 +253,14 @@ titanic_transformer = Pipeline(steps=[
     ('minmax', MinMaxTransformer()),  #from chapter 5
     ('imputer', KNNTransformer())  #from chapter 6
     ], verbose=True)
+
+customer_transformer = Pipeline(steps=[
+    ('id', DropColumnsTransformer(column_list=['ID'])),
+    ('os', OHETransformer(target_column='OS')),
+    ('isp', OHETransformer(target_column='ISP')),
+    ('level', MappingTransformer('Experience Level', {'low': 0, 'medium': 1, 'high':2})),
+    ('gender', MappingTransformer('Gender', {'Male': 0, 'Female': 1})),
+    ('time spent', TukeyTransformer('Time Spent', 'inner')),
+    ('minmax', MinMaxTransformer()),
+    ('imputer', KNNTransformer())
+    ], verbose=True)
