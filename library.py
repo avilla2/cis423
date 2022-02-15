@@ -241,3 +241,15 @@ class KNNTransformer(BaseEstimator, TransformerMixin):
     def fit_transform(self, X, y = None):
         result = self.transform(X)
         return result
+
+
+titanic_transformer = Pipeline(steps=[
+    ('drop', DropColumnsTransformer(['Age', 'Gender', 'Class', 'Joined', 'Married',  'Fare'], 'keep')),
+    ('gender', MappingTransformer('Gender', {'Male': 0, 'Female': 1})),
+    ('class', MappingTransformer('Class', {'Crew': 0, 'C3': 1, 'C2': 2, 'C1': 3})),
+    ('ohe', OHETransformer(target_column='Joined')),
+    ('age', TukeyTransformer(target_column='Age', fence='outer')), #from chapter 4
+    ('fare', TukeyTransformer(target_column='Fare', fence='outer')), #from chapter 4
+    ('minmax', MinMaxTransformer()),  #from chapter 5
+    ('imputer', KNNTransformer())  #from chapter 6
+    ], verbose=True)
