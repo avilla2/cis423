@@ -268,6 +268,26 @@ customer_transformer = Pipeline(steps=[
     ('imputer', KNNTransformer())
     ], verbose=True)
 
+nba_transformer = Pipeline(steps=[
+    ('drop', DropColumnsTransformer(['League', 'W', 'L', 'Finish', 'SRS', 'Pace', 'ORtg', 'DRtg'], 'keep')),
+    ('Finish', MappingTransformer('Finish', {'3rd of 5': 3, '1st of 5': 1, '2nd of 5': 2, '4th of 5': 4, '5th of 5': 5,
+       '3rd of 7': 3, '7th of 7': 7, '6th of 7': 6, '1st of 7': 1, '5th of 7': 5,
+       '4th of 7': 4, '6th of 8': 6, '4th of 8': 4, '8th of 8': 8, '5th of 8': 5,
+       '1st of 8': 1, '2nd of 8': 2, '2nd of 7': 2, '7th of 8': 7, '3rd of 8': 3,
+       '2nd of 6': 2, '4th of 6': 4, '6th of 6': 6, '5th of 6': 5, '1st of 6': 1,
+       '3rd of 6': 3, '1st of 0': 1, '2nd of 4': 2, '1st of 4': 1, '2nd of 0': 2,
+       '4th of 4': 4, '5th of 0': 5, '3rd of 4': 3, '3rd of 0': 3})),
+    ('League_OHE', OHETransformer(target_column='League')),
+    ('SRS', TukeyTransformer('SRS', 'outer')),
+    ('Pace', TukeyTransformer('Pace', 'outer')),
+    ('ORating', TukeyTransformer('ORtg', 'outer')),
+    ('DRating', TukeyTransformer('DRtg', 'outer')),
+    ('Wins', TukeyTransformer('W', 'outer')),
+    ('Loses', TukeyTransformer('L', 'outer')),
+    ('scale', MinMaxTransformer()), 
+    ('imputer', KNNTransformer())
+    ], verbose=True)
+    
 def customer_setup(customer_table, transformer=customer_transformer, rs=107, ts=.2):
     features_table = customer_table.drop(columns=['Rating'])
     labels = customers_df['Rating']
