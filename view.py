@@ -23,7 +23,7 @@ fpage = '''
   <img src='https://img.bleacherreport.net/img/images/photos/003/804/554/hi-res-9a9716c6bb102c42af62340eeb4b0bea_crop_north.jpg?1556082334&w=3072&h=2048' height=200>
 
 
-  <form id="row_info" action="data" method = "POST">
+  <form id="row_info" action="nba-mlops/data" method = "POST">
 
         <!-- I am not using the hidden field - just have it in case can think of some need for it later -->
         <input type='hidden' id='hidden1' value='hidden value'/>

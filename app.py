@@ -7,6 +7,7 @@ import os
 import library
 from view import fpage
 import pandas as pd
+import numpy as np
 
 the_transformer = library.nba_transformer
 file_store = 'models/'
@@ -111,12 +112,12 @@ app = Flask(__name__)
 port = 5000
 
 # Define Flask routes
-@app.route("/")
+@app.route("/nba-mlops")
 #This function called when user first enters url into browser
 def home():
     return create_page(fpage)
 
-@app.route('/data', methods = ['POST'])
+@app.route('/nba-mlops/data', methods = ['POST'])
 #This function called when user hits Evaluate button
 def data():
   form_data = request.form
