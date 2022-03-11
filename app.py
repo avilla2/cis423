@@ -6,6 +6,7 @@ from flask import request
 import os
 import library
 from view import fpage
+import pandas as pd
 
 the_transformer = library.nba_transformer
 file_store = 'models/'
