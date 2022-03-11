@@ -130,3 +130,6 @@ def data():
   ann = np.round(yhat_ann[0], 2)
   ensemble = np.round(ensemble, 2)
   return create_page(fpage, xgb=xgb, knn=knn, logreg=logreg, ann=ann, ensemble=ensemble)  #return specs for new page with answer filled in
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0')
