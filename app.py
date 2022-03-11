@@ -112,12 +112,12 @@ app = Flask(__name__)
 port = 5000
 
 # Define Flask routes
-@app.route("/nba-mlops")
+@app.route("/")
 #This function called when user first enters url into browser
 def home():
     return create_page(fpage)
 
-@app.route('/nba-mlops/data', methods = ['POST'])
+@app.route('/data', methods = ['POST'])
 #This function called when user hits Evaluate button
 def data():
   form_data = request.form
