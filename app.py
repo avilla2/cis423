@@ -107,7 +107,7 @@ def create_page(page, **fillers):
     new_page = new_page.replace(f'%{str(k)}%', str(v))
   return new_page
 
-os.environ["FLASK_ENV"] = "development"
+os.environ["FLASK_ENV"] = "production"
 app = Flask(__name__)
 port = 5000
 
